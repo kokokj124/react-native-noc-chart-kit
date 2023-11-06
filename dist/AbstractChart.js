@@ -85,7 +85,12 @@ var AbstractChart = /** @class */ (function (_super) {
             var basePosition = height * verticalLabelsHeightPercentage;
             return __spreadArrays(new Array(count + 1)).map(function (_, i) {
                 var y = (basePosition / count) * i + paddingTop;
-                if(i === count) return (<Line key={Math.random()} x1={paddingRight} y1={y} x2={width} y2={y} {..._this.getPropsForBackgroundLines()} strokeDasharray='' stroke={'#C9CDD4'}/>);
+                if(i === count){
+                    if(_this.props.hasOwnProperty("dataExtend") && _this.props.dataExtend.hasOwnProperty("current") && _this.props.dataExtend.current.hasOwnProperty("layoutLines")){
+                        _this.props.dataExtend.current.layoutLines = {height: y};
+                    }
+                    return (<Line key={Math.random()} x1={paddingRight} y1={y} x2={width} y2={y} {..._this.getPropsForBackgroundLines()} strokeDasharray='' stroke={'#C9CDD4'}/>);
+                }
                 return (<Line key={Math.random()} x1={paddingRight} y1={y} x2={width} y2={y} {..._this.getPropsForBackgroundLines()} />);
             });
         };

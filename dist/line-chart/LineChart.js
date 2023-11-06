@@ -361,7 +361,7 @@ var LineChart = /** @class */ (function (_super) {
         return _this;
     }
     LineChart.prototype.render = function () {
-        var _a = this.props, width = _a.width, height = _a.height, data = _a.data, _b = _a.withScrollableDot, withScrollableDot = _b === void 0 ? false : _b, _c = _a.withShadow, withShadow = _c === void 0 ? true : _c, _d = _a.withDots, withDots = _d === void 0 ? true : _d, _e = _a.withInnerLines, withInnerLines = _e === void 0 ? true : _e, _f = _a.withOuterLines, withOuterLines = _f === void 0 ? true : _f, _g = _a.withHorizontalLines, withHorizontalLines = _g === void 0 ? true : _g, _h = _a.withVerticalLines, withVerticalLines = _h === void 0 ? true : _h, _j = _a.withHorizontalLabels, withHorizontalLabels = _j === void 0 ? true : _j, _k = _a.withVerticalLabels, withVerticalLabels = _k === void 0 ? true : _k, _l = _a.style, style = _l === void 0 ? {} : _l, decorator = _a.decorator, onDataPointClick = _a.onDataPointClick, _m = _a.verticalLabelRotation, verticalLabelRotation = _m === void 0 ? 0 : _m, _o = _a.horizontalLabelRotation, horizontalLabelRotation = _o === void 0 ? 0 : _o, _p = _a.formatYLabel, formatYLabel = _p === void 0 ? function (yLabel) { return yLabel; } : _p, _q = _a.formatXLabel, formatXLabel = _q === void 0 ? function (xLabel) { return xLabel; } : _q, segments = _a.segments, _r = _a.transparent, transparent = _r === void 0 ? false : _r, chartConfig = _a.chartConfig;
+        var _a = this.props, width = _a.width, height = _a.height, data = _a.data, _b = _a.withScrollableDot, withScrollableDot = _b === void 0 ? false : _b, _c = _a.withShadow, withShadow = _c === void 0 ? true : _c, _d = _a.withDots, withDots = _d === void 0 ? true : _d, _e = _a.withInnerLines, withInnerLines = _e === void 0 ? true : _e, _f = _a.withOuterLines, withOuterLines = _f === void 0 ? true : _f, _g = _a.withHorizontalLines, withHorizontalLines = _g === void 0 ? true : _g, _h = _a.withVerticalLines, withVerticalLines = _h === void 0 ? true : _h, _j = _a.withHorizontalLabels, withHorizontalLabels = _j === void 0 ? true : _j, _k = _a.withVerticalLabels, withVerticalLabels = _k === void 0 ? true : _k, _l = _a.style, style = _l === void 0 ? {} : _l, decorator = _a.decorator, onDataPointClick = _a.onDataPointClick, _m = _a.verticalLabelRotation, verticalLabelRotation = _m === void 0 ? 0 : _m, _o = _a.horizontalLabelRotation, horizontalLabelRotation = _o === void 0 ? 0 : _o, _p = _a.formatYLabel, formatYLabel = _p === void 0 ? function (yLabel) { return yLabel; } : _p, _q = _a.formatXLabel, formatXLabel = _q === void 0 ? function (xLabel) { return xLabel; } : _q, segments = _a.segments, _r = _a.transparent, transparent = _r === void 0 ? false : _r, chartConfig = _a.chartConfig, onPressChart = _a.onPressChart;
         var scrollableDotHorizontalOffset = this.state.scrollableDotHorizontalOffset;
         var _s = data.labels, labels = _s === void 0 ? [] : _s;
         var _t = style.borderRadius, borderRadius = _t === void 0 ? 0 : _t, _u = style.paddingTop, paddingTop = _u === void 0 ? 16 : _u, _v = style.paddingRight, paddingRight = _v === void 0 ? 64 : _v, _w = style.margin, margin = _w === void 0 ? 0 : _w, _x = style.marginRight, marginRight = _x === void 0 ? 0 : _x, _y = style.paddingBottom, paddingBottom = _y === void 0 ? 0 : _y;
@@ -378,7 +378,12 @@ var LineChart = /** @class */ (function (_super) {
         }
         var legendOffset = this.props.data.legend ? height * 0.15 : 0;
         return (<View style={style}>
-        <Svg height={height + paddingBottom + legendOffset} width={width - margin * 2 - marginRight}>
+        <Svg height={height + paddingBottom + legendOffset} width={width - margin * 2 - marginRight}  onPress={() => {
+            if(onPressChart){
+             return onPressChart();
+            }
+            return;
+          }}>
           <Rect width="100%" height={height + legendOffset} rx={borderRadius} ry={borderRadius} fill="url(#backgroundGradient)" fillOpacity={transparent ? 0 : 1}/>
           {this.props.data.legend &&
             this.renderLegend(config.width, legendOffset)}
