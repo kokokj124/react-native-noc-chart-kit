@@ -34,6 +34,7 @@ import { Animated, ScrollView, StyleSheet, TextInput, View } from "react-native"
 import { Circle, G, Path, Polygon, Polyline, Rect, Svg } from "react-native-svg";
 import AbstractChart from "../AbstractChart";
 import { LegendItem } from "./LegendItem";
+import {get, set} from "lodash";
 var AnimatedCircle = Animated.createAnimatedComponent(Circle);
 var LineChart = /** @class */ (function (_super) {
     __extends(LineChart, _super);
@@ -92,9 +93,14 @@ var LineChart = /** @class */ (function (_super) {
                             getColor: function (opacity) { return _this.getColor(dataset, opacity); }
                         });
                     };
+                    if(get(_this.props, 'dataExtend.current.dataDot', undefined) && dataset.key !== undefined){
+                        set(_this.props.dataExtend.current.dataDot, `${i}.x`, Math.min(cx, get(_this.props.dataExtend.current.dataDot, `${i}.x`, Infinity)));
+                        set(_this.props.dataExtend.current.dataDot, `${i}.y`, Math.min(cy, get(_this.props.dataExtend.current.dataDot, `${i}.y`, Infinity)));
+                        set(_this.props.dataExtend.current.dataDot, `${i}.${dataset.key}`, {value: x, color: dataset.color(), x: cx, y: cy});
+                    }
                     output.push(<Circle key={Math.random()} cx={cx} cy={cy} fill={typeof getDotColor === "function"
                         ? getDotColor(x, i)
-                        : _this.getColor(dataset, 0.9)} onPress={onPress} {..._this.getPropsForDots(x, i)}/>, <Circle key={Math.random()} cx={cx} cy={cy} r="14" fill="#fff" fillOpacity={0} onPress={onPress}/>, renderDotContent({ x: cx, y: cy, index: i, indexData: x }));
+                        : _this.getColor(dataset, 0.9)} onPress={onPress} {..._this.getPropsForDots(x, i)}/>, <Circle key={Math.random()} cx={cx} cy={cy} r="14" fill="#fff" fillOpacity={0} onPress={onPress}/>, renderDotContent({ x: cx, y: cy, index: i, indexData: x, key: dataset.key }));
                 });
             });
             return output;

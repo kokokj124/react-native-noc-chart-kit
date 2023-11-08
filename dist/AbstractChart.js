@@ -30,7 +30,8 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 import React, { Component } from "react";
-import { Defs, Line, LinearGradient, Stop, Text } from "react-native-svg";
+import { Defs, Line, LinearGradient, Stop, Text, Rect, G } from "react-native-svg";
+import {get} from 'lodash';
 export var DEFAULT_X_LABELS_HEIGHT_PERCENTAGE = 0.75;
 var AbstractChart = /** @class */ (function (_super) {
     __extends(AbstractChart, _super);
@@ -86,7 +87,7 @@ var AbstractChart = /** @class */ (function (_super) {
             return __spreadArrays(new Array(count + 1)).map(function (_, i) {
                 var y = (basePosition / count) * i + paddingTop;
                 if(i === count){
-                    if(_this.props.hasOwnProperty("dataExtend") && _this.props.dataExtend.hasOwnProperty("current") && _this.props.dataExtend.current.hasOwnProperty("layoutLines")){
+                    if(get(_this.props, 'dataExtend.current.layoutLines', undefined)){
                         _this.props.dataExtend.current.layoutLines = {height: y};
                     }
                     return (<Line key={Math.random()} x1={paddingRight} y1={y} x2={width} y2={y} {..._this.getPropsForBackgroundLines()} strokeDasharray='' stroke={'#C9CDD4'}/>);
@@ -132,6 +133,18 @@ var AbstractChart = /** @class */ (function (_super) {
             if (stackedBar) {
                 fac = 0.71;
             }
+            let x1 = (((width - paddingRight) / labels.length) * 1 +
+            paddingRight +
+            horizontalOffset) *
+            fac;
+
+            let x0 = (((width - paddingRight) / labels.length) * 0 +
+            paddingRight +
+            horizontalOffset) *
+            fac;
+
+            let widthRect = x1 - x0 - 6;
+
             return labels.map(function (label, i) {
                 if (hidePointsAtIndex.includes(i)) {
                     return null;
@@ -144,9 +157,23 @@ var AbstractChart = /** @class */ (function (_super) {
                     paddingTop +
                     fontSize * 2 +
                     xLabelsOffset;
-                return (<Text origin={x + ", " + y} rotation={verticalLabelRotation} key={Math.random()} x={x} y={y} textAnchor={verticalLabelRotation === 0 ? "middle" : "start"} {..._this.getPropsForLabels()} {..._this.getPropsForVerticalLabels()}>
-          {"" + formatXLabel(label) + xAxisLabel}
-        </Text>);
+
+                return <G>
+                    <Text origin={x + ", " + y} rotation={verticalLabelRotation} key={Math.random()} x={x} y={y} textAnchor={verticalLabelRotation === 0 ? "middle" : "start"} {..._this.getPropsForLabels()} {..._this.getPropsForVerticalLabels()}>
+                    {"" + formatXLabel(label) + xAxisLabel}
+                    </Text>
+                    <Rect
+                        x={x-widthRect/2}
+                        y={y - get(_this.props, 'dataExtend.current.layoutLines.height', 200) - _this.getPropsForLabels().fontSize * 2}
+                        width={widthRect}
+                        height={get(_this.props, 'dataExtend.current.layoutLines.height', 170) + 30}
+                        fill="transparent"
+                        onPress={() => {
+                            get(_this.props, 'onPressVerticalLine', () => {})(i)
+                        }
+                        }
+                    />
+                </G>
             });
         };
         _this.renderVerticalLines = function (_a) {
