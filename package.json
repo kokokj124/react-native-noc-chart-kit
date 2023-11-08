@@ -1,6 +1,6 @@
 {
   "name": "@kokokj124/react-native-noc-chart-kit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "devDependencies": {
     "@types/react-native": "^0.62.13",
     "babel-eslint": "10.x",
